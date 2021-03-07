@@ -1,8 +1,20 @@
-import numpy as np
 import math
 
 
 def genmap(length, x, y, x_spacing, y_spacing, first=0, x0=0, y0=0, top_left=False):
+    '''
+    Generate map of ArUco markers
+    :param length: length of marker
+    :param x: number of markers by x
+    :param y: number of markers by y
+    :param x_spacing: distance between markers by x
+    :param y_spacing: distance between markers by y
+    :param first: first marker id
+    :param x0: firs marker x coordinate
+    :param y0: first marker y coordinate
+    :param top_left: generate map by top left corner
+    :return: list of ArUco markers
+    '''
     markers = []
     max_y = y0 + (y - 1) * y_spacing
     for j in range(y):
@@ -18,6 +30,14 @@ def genmap(length, x, y, x_spacing, y_spacing, first=0, x0=0, y0=0, top_left=Fal
 
 
 def translate_map(map, dx=0, dy=0, dz=0):
+    '''
+    Translate map along each axis
+    :param map: list of markers
+    :param dx: x distance
+    :param dy: y distance
+    :param dz: x distance
+    :return: list of translated markers
+    '''
     newmap = []
     for marker in map:
         marker["x"] += dx
@@ -28,6 +48,15 @@ def translate_map(map, dx=0, dy=0, dz=0):
 
 
 def rotate_map_z(map, angle, x0=0, y0=0, center=False):
+    '''
+    Rotate map around z axis
+    :param map: list of markers
+    :param angle: rotation angle
+    :param x0: center point x coordinate
+    :param y0: center point y coordinate
+    :param center: if True, rotate around map center
+    :return: list of rotated markers
+    '''
     if center:
         for marker in map:
             x0 += marker["x"]
@@ -46,22 +75,34 @@ def rotate_map_z(map, angle, x0=0, y0=0, center=False):
 
 
 def print_map(map):
+    '''
+    Print map to standard output
+    :param map: list of markers
+    '''
     print('# id\tlength\tx\ty\tz\trot_z\trot_y\trot_x')
     for marker in map:
-        print('{}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{}\t{}'.format(marker["id"], marker["length"], marker["x"], marker["y"],
-                                                      marker["z"], marker["rot_z"], marker["rot_y"], marker["rot_x"]))
+        print('{}\t{}\t{:0.2f}\t{:0.2f}\t{:0.2f}\t{}\t{}\t{}'.format(marker["id"], marker["length"], marker["x"],
+                                                                     marker["y"],
+                                                                     marker["z"], marker["rot_z"], marker["rot_y"],
+                                                                     marker["rot_x"]))
 
 
 def exclude_17(map):
+    '''
+    Delete 17 marker from map
+    :param map: original list of markers
+    :return: list of markers
+    '''
     newmap = []
     for marker in map:
         if marker["id"] != 17:
             newmap.append(marker)
     return newmap
 
+
 if __name__ == '__main__':
-    map1 = genmap(0.22, 3, 10, 0.28, 0.28, top_left= True)
-    map2 = genmap(0.22, 3, 10, 0.28, 0.28, first=30, top_left= True)
+    map1 = genmap(0.22, 3, 10, 0.28, 0.28, top_left=True)
+    map2 = genmap(0.22, 3, 10, 0.28, 0.28, first=30, top_left=True)
     map2 = rotate_map_z(map2, math.radians(180), center=True)
     map2 = translate_map(map2, dx=0.28 * 3)
     map1.extend(map2)
