@@ -98,12 +98,19 @@ def exclude_17(map):
             newmap.append(marker)
     return newmap
 
+def concatenate_maps(*args):
+    map = []
+    for m in args:
+        map.extend(m)
+    return map
+
 
 if __name__ == '__main__':
     map1 = genmap(0.22, 3, 10, 0.28, 0.28, top_left=True)
     map2 = genmap(0.22, 3, 10, 0.28, 0.28, first=30, top_left=True)
     map2 = rotate_map_z(map2, math.radians(180), center=True)
     map2 = translate_map(map2, dx=0.28 * 3)
-    map1.extend(map2)
+    # map1.extend(map2)
+    map = concatenate_maps(map1, map2)
 
-    print_map(exclude_17(map1))
+    print_map(exclude_17(map))
