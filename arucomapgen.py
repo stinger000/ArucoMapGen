@@ -16,12 +16,11 @@ def genmap(length, x, y, x_spacing, y_spacing, first=0, x0=0, y0=0, top_left=Fal
     :return: list of ArUco markers
     '''
     markers = []
-    max_y = y0 + (y - 1) * y_spacing
     for j in range(y):
         for i in range(x):
             pos_y = y0 + j * y_spacing
             if top_left:
-                pos_y = max_y - pos_y
+                pos_y = y0 - j * y_spacing
             markers.append(
                 {"id": first, "length": length, "x": x0 + x_spacing * i, "y": pos_y, "z": 0, "rot_x": 0,
                  "rot_y": 0, "rot_z": 0})
